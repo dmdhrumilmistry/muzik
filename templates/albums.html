@@ -1,5 +1,49 @@
 {% extends "base.html" %}
 {% load static %}
 {% block body %}
-    {{ search_result }}
+    {% if search_result %}
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-xl-4 justify-content-center mx-2 my-2">
+                    {% for song in search_result.results %}
+                        <div class="col mb-5 p-2 mx-2">
+                            <div class="card" style="width: 18rem;">
+                                <img src="{{ song.image }}"
+                                     class="card-img-top"
+                                     alt="{{ song.title }}_image">
+                                <div class="badge bg-dark text-white position-absolute"
+                                     style="top: 0.5rem; left: 0.5rem">{{ song.type }}</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ song.title }}</h5>
+                                    <div class="card-subtitle mb-2 text-muted">{{ song.subtitle }}</div>
+                                    <div class="card-text py-1">
+                                        <div class="row">
+                                            <div class="col-sm">Language</div>
+                                            <div class="col-sm">{{ song.language }}</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm">Year</div>
+                                            <div class="col-sm">{{ song.year }}</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm">Total Plays</div>
+                                            <div class="col-sm">{{ song.play_count }}</div>
+                                        </div>
+                                    </div>
+                                    <a href="{{ song.perma_url }}" class="btn btn-primary" type="submit">Listen</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% else %}
+    <div class="container-lg text-center p-4">
+        <div class="container-fluid img-fluid">
+            <img src="{% static 'images/logo/logo.png' %}">
+        </div>
+        <h1 class="alert-heading">Search for a Album using Search Box<h1>
+    </div>
+    {% endif %}
 {% endblock body %}

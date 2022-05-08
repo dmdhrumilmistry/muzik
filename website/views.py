@@ -1,4 +1,6 @@
+from turtle import down
 from django.shortcuts import render
+from django.http import JsonResponse
 from musicapy.saavn_api.api import SaavnAPI
 from pprint import pprint
 
@@ -66,3 +68,20 @@ def albums_page(request):
             context['search_result'] = data
 
     return render(request, 'albums.html', context=context)
+
+def generate_download_links(request):
+    data = {'msg' : 'Bad Request'}
+    if request.method == 'GET':
+        link = request.GET.get('link', False)
+        if link and 'song' in link and 'saavn' in link:
+            identifier = api.create_identifier(link, 'song')
+            download_links = api.get_download_links(identifier)
+            data = {"song_link": link, "download_links" : download_links}
+        elif link and 'album' in link and 'saavn' in link:
+            identifier = api.create_identifier(link, 'album')
+            download_links = api.generate_album_download_links(identifier)
+            data = {"album_link": link, 'download_links' : download_links}
+        else:
+            data['msg'] = 'link required'
+
+    return JsonResponse(data)

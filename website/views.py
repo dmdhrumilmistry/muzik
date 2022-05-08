@@ -67,8 +67,9 @@ def download_songs(request):
     def dict_to_list(dictionary): return [[k, v]
                                           for k, v in dictionary.items()]
 
-    context = {"title": "Download Page"}
+    context = {"title": "Download Page", "search_for": "Song/Album Name/Saavn Link"}
     req_type = 'invalid'
+    songs_payload = []
     if request.method == 'GET':
         link = request.GET.get('link', False)
         context['link'] = link

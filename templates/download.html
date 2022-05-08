@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block body %}
-    {% if payload %}
+    {% if payload and type != 'invalid' %}
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-xl-4 justify-content-center mx-2 my-2">
@@ -34,16 +34,15 @@
                         </div>
                     {% endfor %}
                 </div>
-            </div>
-        </section>
-    {% else %}
-        <div class="container-lg text-center p-4">
-            <div class="container-fluid img-fluid">
-                <img src="{% static 'images/logo/logo.png' %}">
-            </div>
-            <h1 class="alert-heading">
-                Search for a Song using Search Box
-                <h1>
+            </section>
+        {% else %}
+            <div class="container-lg text-center p-4">
+                <div class="container-fluid img-fluid">
+                    <img src="{% static 'images/logo/logo.png' %}">
                 </div>
-            {% endif %}
-        {% endblock body %}
+                <h1 class="alert-heading">
+                    Search for a Song using Search Box
+                <h1>
+            </div>
+        {% endif %}
+{% endblock body %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+    {% if payload %}
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-xl-4 justify-content-center mx-2 my-2">
+                    {% for song_details in payload.songs %}
+                        <div class="col mb-5 p-2 mx-2">
+                            <div class="card" style="width: 18rem;">
+                                <img src="{{ song_details.image }}"
+                                     class="card-img-top"
+                                     alt="{{ song_details.title }}_image">
+                                <div class="badge bg-dark text-white position-absolute"
+                                     style="top: 0.5rem; left: 0.5rem">song</div>
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">
+                                        <strong>{{ song_details.song }}</strong>
+                                    </h5>
+                                    <div class="card-text py-1">
+                                        {% for download_details in song_details.links %}
+                                            <div class="row p-1">
+                                                <div class="col-sm">{{ download_details.0 }}</div>
+                                                <div class="col-sm">
+                                                    <a href="{{ download_details.1 }}"
+                                                       target="_blank"
+                                                       class="btn btn-primary">Download</a>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% else %}
+        <div class="container-lg text-center p-4">
+            <div class="container-fluid img-fluid">
+                <img src="{% static 'images/logo/logo.png' %}">
+            </div>
+            <h1 class="alert-heading">
+                Search for a Song using Search Box
+                <h1>
+                </div>
+            {% endif %}
+        {% endblock body %}

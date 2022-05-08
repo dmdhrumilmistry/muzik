@@ -1,8 +1,5 @@
-from turtle import down
 from django.shortcuts import render
-from django.http import JsonResponse
 from musicapy.saavn_api.api import SaavnAPI
-from pprint import pprint
 
 api = SaavnAPI()
 
@@ -20,7 +17,6 @@ def index(request):
                 identifier = api.create_identifier(query, 'song')
                 data = api.get_song_details(identifier)
 
-                pprint(data)
                 songs = []
                 for song in data.get('songs', []):
                     song_data = {"title": song.get('song', None), "image": song.get('image', None), "year": song.get(
@@ -51,9 +47,6 @@ def songs_page(request):
         if song_query:
             data = api.search_song(song_query)
             context['search_result'] = data
-    # elif request.method == 'GET':
-        # data = api.get_trending()
-        # context['search_result'] = {'results' : data}
 
     return render(request, 'songs.html', context=context)
 
@@ -69,19 +62,44 @@ def albums_page(request):
 
     return render(request, 'albums.html', context=context)
 
-def generate_download_links(request):
-    data = {'msg' : 'Bad Request'}
+
+def download_songs(request):
+    def dict_to_list(dictionary): return [[k, v]
+                                          for k, v in dictionary.items()]
+
+    context = {"title": "Download Page"}
+    req_type = 'invalid'
     if request.method == 'GET':
         link = request.GET.get('link', False)
+        context['link'] = link
         if link and 'song' in link and 'saavn' in link:
+            req_type = 'song'
             identifier = api.create_identifier(link, 'song')
             download_links = api.get_download_links(identifier)
-            data = {"song_link": link, "download_links" : download_links}
-        elif link and 'album' in link and 'saavn' in link:
-            identifier = api.create_identifier(link, 'album')
-            download_links = api.generate_album_download_links(identifier)
-            data = {"album_link": link, 'download_links' : download_links}
-        else:
-            data['msg'] = 'link required'
 
-    return JsonResponse(data)
+            song_details = api.get_song_details(identifier, use_v4=True)
+            song_details = song_details.get('songs', [False])[0]
+
+            songs_payload = [{
+                'song': song_details.get('title'),
+                'image': song_details.get('image'),
+                'links': dict_to_list(download_links)
+            }]
+
+        elif link and 'album' in link and 'saavn' in link:
+            req_type = 'album'
+            identifier = api.create_identifier(link, 'album')
+            songs_payload = api.generate_album_download_links(identifier)
+            if songs_payload:
+                songs_payload = songs_payload.get('songs')
+
+            for song_payload in songs_payload:
+                song_payload['links'] = dict_to_list(
+                    song_payload.get('links', {'msg': 'not fount'}))
+
+        else:
+            context['type'] = 'invalid'
+            download_links = None
+
+        context['payload'] = {'type': req_type, 'songs': songs_payload}
+    return render(request, 'download.html', context=context)

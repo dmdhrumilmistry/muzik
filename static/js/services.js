@@ -1,6 +1,14 @@
+// Music Player Services
+function getSongs(url){
+    return false
+}
+
 function getDataJSON(url){
     fetch(url)
-    .then((response) => response.json())
+    .then((response) => {
+        console.log()
+        return response.json()
+    })
 
     .then((data) => false)
 

@@ -5,5 +5,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('albums', views.albums_page, name='songs_page'),
     path('songs', views.songs_page, name='albums_page'),
-    path('download', views.download_songs, name='download__songs'),
+    path('download', views.download_songs, name='download_songs'),
 ]

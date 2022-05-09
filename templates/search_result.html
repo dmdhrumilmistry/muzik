@@ -7,7 +7,7 @@
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-xl-4 justify-content-center mx-2 my-2">
                     {% for song in search_result.results %}
                         <div class="col mb-5 p-2 mx-2">
-                            <div class="card" style="width: 18rem;">
+                            <div class="card">
                                 <img src="{{ song.image }}"
                                      class="card-img-top"
                                      alt="{{ song.title }}_image">
@@ -25,12 +25,16 @@
                                             <div class="col-sm">Year</div>
                                             <div class="col-sm">{{ song.year }}</div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-sm">Total Plays</div>
-                                            <div class="col-sm">{{ song.play_count }}</div>
-                                        </div>
+                                        {% if song.play_count  %}
+                                            <div class="row">
+                                                <div class="col-sm">Total Plays</div>
+                                                <div class="col-sm">{{ song.play_count }}</div>
+                                            </div>
+                                        {% endif %}
                                     </div>
-                                    <a href="/download?link={{ song.perma_url }}" class="btn btn-primary" type="submit">Download</a>
+                                    <a href="/download?link={{ song.perma_url }}"
+                                       class="btn btn-primary"
+                                       type="submit">Download</a>
                                 </div>
                             </div>
                         </div>
@@ -39,11 +43,14 @@
             </div>
         </section>
     {% else %}
-    <div class="container-lg text-center p-4">
-        <div class="container">
-            <img src="{% static 'images/logo/logo.png' %}" class="img-fluid rounded">
-        </div>
-        <h1 class="alert-heading">Search for a Album using Search Box<h1>
-    </div>
-    {% endif %}
-{% endblock body %}
+        <div class="container text-center p-4">
+            <div class="container">
+                <img src="{% static 'images/logo/logo.png' %}" class="img-fluid rounded">
+            </div>
+            <h1 class="alert-heading">
+            
+                Search for a {% if search_method == 'search_songs' %}Song{% elif search_method == 'search_albums'%}Album{% else%}Song/Album{% endif %} using Search Box
+                <h1>
+                </div>
+            {% endif %}
+        {% endblock body %}

@@ -36,7 +36,7 @@ def index(request):
 
         context["search_result"] = data
 
-    return render(request, 'index.html', context=context)
+    return render(request, 'search_result.html', context=context)
 
 
 def songs_page(request):
@@ -48,7 +48,7 @@ def songs_page(request):
             data = api.search_song(song_query)
             context['search_result'] = data
 
-    return render(request, 'songs.html', context=context)
+    return render(request, 'search_result.html', context=context)
 
 
 def albums_page(request):
@@ -60,7 +60,7 @@ def albums_page(request):
             data = api.search_album(album_query)
             context['search_result'] = data
 
-    return render(request, 'albums.html', context=context)
+    return render(request, 'search_result.html', context=context)
 
 
 def download_songs(request):

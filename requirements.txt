@@ -2,3 +2,4 @@ django
 whitenoise
 MusicAPy
 wget
+gunicorn
